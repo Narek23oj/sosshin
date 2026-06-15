@@ -37,7 +37,8 @@ async function startServer() {
 
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '10mb' }));
+  app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
   // Real-time synchronization
   io.on("connection", (socket) => {

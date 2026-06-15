@@ -121,7 +121,9 @@ export default function AdminPage({ onLogout }: AdminPageProps) {
     syncService.updateProducts(currentProducts);
     setProducts(currentProducts);
     setEditingProduct(null);
+    setScanStatus('Ապրանքը հաջողությամբ պահպանվեց։');
     (e.target as HTMLFormElement).reset();
+    setTimeout(() => setScanStatus(''), 3000);
   };
 
   const handleDeleteProduct = (id: string) => {
@@ -136,6 +138,22 @@ export default function AdminPage({ onLogout }: AdminPageProps) {
     storage.saveMessages(currentMessages);
     syncService.updateMessages(currentMessages);
     setMessages(currentMessages);
+  };
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { // 2MB limit for base64 embedding
+        setScanStatus('Image too large (max 2MB)');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditingProduct({ ...editingProduct, image: reader.result as string });
+        setScanStatus('Image uploaded and embedded.');
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSearchOnline = async () => {
@@ -343,17 +361,32 @@ export default function AdminPage({ onLogout }: AdminPageProps) {
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label className="text-sm font-extrabold text-white">Image URL</label>
-                    <div className="relative">
-                      <ImageIcon className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-text-muted" />
-                      <input 
-                        type="text" 
-                        name="image"
-                        value={editingProduct?.image || ''}
-                        onChange={(e) => setEditingProduct({...editingProduct, image: e.target.value})}
-                        placeholder="https://... կամ assets/image.png" 
-                        className="pl-12"
-                      />
+                    <label className="text-sm font-extrabold text-white">Product Image</label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1">
+                        <ImageIcon className="absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2 text-text-muted" />
+                        <input 
+                          type="text" 
+                          name="image"
+                          value={editingProduct?.image || ''}
+                          onChange={(e) => setEditingProduct({...editingProduct, image: e.target.value})}
+                          placeholder="Image URL or upload ->" 
+                          className="pl-12"
+                        />
+                      </div>
+                      <label className="flex h-12 w-12 cursor-pointer items-center justify-center rounded-lg border border-border bg-white/5 text-white hover:bg-white/10 transition-colors overflow-hidden">
+                        {editingProduct?.image ? (
+                          <img src={editingProduct.image} alt="Preview" className="h-full w-full object-cover" />
+                        ) : (
+                          <Plus className="h-5 w-5" />
+                        )}
+                        <input 
+                          type="file" 
+                          className="hidden" 
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                        />
+                      </label>
                     </div>
                   </div>
                   <div className="flex flex-col gap-2">
