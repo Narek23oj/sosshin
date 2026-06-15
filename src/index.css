@@ -1,0 +1,50 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Noto Sans Armenian", ui-sans-serif, system-ui, sans-serif;
+  
+  /* Elegant Dark Theme Colors */
+  --color-bg-main: #0a0a0a;
+  --color-bg-card: #141414;
+  --color-bg-sidebar: #080808;
+  --color-accent: #4f46e5; /* indigo-600 */
+  --color-accent-hover: #4338ca; /* indigo-700 */
+  --color-border: #27272a; /* zinc-800 */
+  --color-border-hover: #3f3f46; /* zinc-700 */
+  --color-text-primary: #ffffff;
+  --color-text-secondary: #d4d4d8; /* zinc-300 */
+  --color-text-muted: #71717a; /* zinc-500 */
+}
+
+:root {
+  --navy: #0a0a0a;
+  --blue: #4f46e5;
+  --cyan: #6366f1;
+  --ice: #18181b;
+  --line: #27272a;
+}
+
+body {
+  @apply bg-bg-main text-text-secondary antialiased;
+}
+
+.brand-mark {
+  background: var(--color-accent);
+}
+
+input, textarea, select {
+  @apply bg-bg-card border-border text-text-primary placeholder:text-text-muted focus:border-accent focus:ring-1 focus:ring-accent outline-none transition-all;
+}
+
+.product-card {
+  @apply bg-bg-card border-border transition-all duration-300 hover:border-accent/50;
+}
+
+.section-title {
+  @apply text-text-primary font-bold;
+}
+
+.eyebrow {
+  @apply text-accent font-extrabold tracking-widest uppercase text-xs;
+}
+

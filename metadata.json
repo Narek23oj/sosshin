@@ -1,0 +1,6 @@
+{
+  "name": "Sosshin Pool Equipment",
+  "description": "A catalog for pool equipment including pumps, filters, and pipes with an admin management panel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

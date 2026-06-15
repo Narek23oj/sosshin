@@ -1,0 +1,35 @@
+{
+  "products": [
+    {
+      "id": "1",
+      "barcode": "SOS-PUMP-1500",
+      "name": "Լողավազանի նասոս 1.5 HP",
+      "price": 145000,
+      "image": "",
+      "status": "Popular",
+      "pinned": true,
+      "createdAt": "2026-06-15T03:42:23Z"
+    },
+    {
+      "id": "2",
+      "barcode": "SOS-PVC-50",
+      "name": "PVC խողովակ 50մմ",
+      "price": 3200,
+      "image": "",
+      "status": "New",
+      "pinned": false,
+      "createdAt": "2026-06-15T03:42:23Z"
+    }
+  ],
+  "messages": [],
+  "admins": [
+    {
+      "email": "narek@sosshin.am",
+      "role": "Main admin"
+    },
+    {
+      "email": "vardan@sosshin.am",
+      "role": "Admin"
+    }
+  ]
+}
