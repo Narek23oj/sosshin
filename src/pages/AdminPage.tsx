@@ -148,11 +148,47 @@ export default function AdminPage({ onLogout }: AdminPageProps) {
         return;
       }
       const reader = new FileReader();
+      reader.onloadstart = () => setScanStatus('Սեղմում ենք նկարը...');
       reader.onloadend = () => {
         setEditingProduct({ ...editingProduct, image: reader.result as string });
-        setScanStatus('Image uploaded and embedded.');
+        setScanStatus('Նկարը հաջողությամբ վերբեռնվեց։');
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handleExportDB = () => {
+    const data = {
+      products: storage.getProducts(),
+      messages: storage.getMessages(),
+      admins: storage.getAdmins(),
+      exportedAt: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sosshin-backup-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+  };
+
+  const handleImportDB = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const data = JSON.parse(ev.target?.result as string);
+          if (data.products) storage.saveProducts(data.products);
+          if (data.messages) storage.saveMessages(data.messages);
+          if (data.admins) storage.saveAdmins(data.admins);
+          setScanStatus('Տվյալները հաջողությամբ ներմուծվեցին։');
+          refreshData();
+        } catch (err) {
+          setScanStatus('Սխալ ֆայլի ձևաչափ։');
+        }
+      };
+      reader.readAsText(file);
     }
   };
 
@@ -236,6 +272,22 @@ export default function AdminPage({ onLogout }: AdminPageProps) {
           >
             <LogOut className="h-5 w-5" /> Logout
           </button>
+
+          <div className="mt-8 rounded-xl border border-border bg-white/5 p-4">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-widest text-text-muted">Database Tools</h4>
+            <div className="grid gap-2">
+              <button 
+                onClick={handleExportDB}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border border-border bg-transparent py-2 text-xs font-bold text-white hover:bg-white/5 transition-all"
+              >
+                Export JSON Backup
+              </button>
+              <label className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-border bg-transparent py-2 text-xs font-bold text-white hover:bg-white/5 transition-all">
+                Import Backup
+                <input type="file" className="hidden" accept=".json" onChange={handleImportDB} />
+              </label>
+            </div>
+          </div>
         </nav>
       </aside>
 
